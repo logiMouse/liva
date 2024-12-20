@@ -16,4 +16,14 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static final int RM1_Id = 0;
+  public static final int RM2_Id = 1;
+  public static final int LM1_Id = 2;
+  public static final int LM2_Id = 3;
+
+  public static final int IntakeId = 4;
+  public static final int ShooterId = 5;
+  
+  public static final double intake_speed = 1;
+  public static final double shoot_speed = 1;
 }

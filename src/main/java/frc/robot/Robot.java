@@ -1,12 +1,18 @@
-j// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,6 +21,26 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  //Motor
+  private CANSparkMax r_motor1 = new CANSparkMax(Constants.rm1_Id,MotorType.kBrushless);
+  private CANSparkMax r_motor2 = new CANSparkMax(Constants.rm2_Id,MotorType.kBrushless);
+  private CANSparkMax l_motor1 = new CANSparkMax(Constants.lm1_Id,MotorType.kBrushless);
+  private CANSparkMax l_motor2 = new CANSparkMax(Constants.lm2_Id,MotorType.kBrushless);
+  //Intake Motors
+  private CANSparkMax intake_motor = new CANSparkMax(Constants.intakeid, MotorType.kBrushless);
+  //Shooter Motors
+  private CANSparkMax fast_shooter = new CANSparkMax(Constants.fastshooterid, MotorType.kBrushless);
+  private CANSparkMax shooter = new CANSparkMax(Constants.shooterid, MotorType.kBrushless);
+  private CANSparkMax holdshooter = new CANSparkMax(Constants.holdshooterid, MotorType.kBrushless);
+  //Joysticks 
+  private Joystick r_joystick = new Joystick(1);
+  private Joystick l_joystick = new Joystick(0);
+  //Joystick Buttons
+  private JoystickButton intake = new JoystickButton(r_joystick,1);
+  private JoystickButton fastshooter = new JoystickButton(l_joystick, 1);
+  private JoystickButton n_shooter = new JoystickButton(l_joystick, 2);
+  private JoystickButton h_shooter = new JoystickButton(l_joystick, 3);
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -25,6 +51,30 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    //Idle Mode for Motors
+    r_motor1.setIdleMode(IdleMode.kBrake);
+    r_motor2.setIdleMode(IdleMode.kBrake);
+    l_motor1.setIdleMode(IdleMode.kBrake);
+    l_motor2.setIdleMode(IdleMode.kBrake);
+    //Idle Mode for Intake
+    intake_motor.setIdleMode(IdleMode.kBrake);
+    //Idle Mode for Shooters
+    fast_shooter.setIdleMode(IdleMode.kBrake);
+    shooter.setIdleMode(IdleMode.kBrake);
+    holdshooter.setIdleMode(IdleMode.kBrake);
+    //Inverting Motors
+    //r_motor1.setInverted(true);
+    //l_motor1.setInverted(true);
+
+    //intake_motor.setInverted(true);
+
+    //fast_shooter.setInverted(true);
+    //shooter.setInverted(true);
+    //holdshooter.setInverted(true);
+
+    r_motor2.follow(r_motor1);
+    l_motor2.follow(l_motor1);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -81,7 +131,38 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+    r_motor1.set(r_joystick.getY() - r_joystick.getX());
+    l_motor1.set(l_joystick.getY() - l_joystick.getX());
+
+    //Intake
+    if (intake.getAsBoolean()){
+      intake_motor.set(Constants.intake_speed);
+    }else{
+      intake_motor.set(0);
+    
+    }
+
+    if(fastshooter.getAsBoolean()){
+      fast_shooter.set(Constants.fast_shoot_speed);
+    }else{
+      fast_shooter.set(0);
+    }
+    if (n_shooter.getAsBoolean()){
+      shooter.set(Constants.shoot_speed);
+    }else{
+      shooter.set(0);
+    }
+    if (h_shooter.getAsBoolean()){
+      holdshooter.set(Constants.hold_speed);
+    }else{
+      holdshooter.set(0);
+    }
+  }
+
+
+
 
   @Override
   public void testInit() {
