@@ -13,7 +13,74 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  // climber 
+    public static final int climber_left = 0;
+    public static final int climber_right = 1;
+
+  
+    public static final double climber_speed = 0;
+    public static final double climber_speed_stop = 0;       
+    
+    
+    // pivot 
+    public static final int Pivot_motor = 2;
+    
+    
+    public static final double pivot_speed = 0;
+    public static final double pivot_speed_zero = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int kDriverControllerPort = 56;
+    
+    // climber 
+    public static final int climber_left = 0;
+    public static final int climber_right = 1;
+
+  
+    public static final double climber_speed = 0;
+    public static final double climber_speed_stop = 0;       
+    
+    
+    // pivot 
+    public static final int Pivot_motor = 2;
+    
+    
+    public static final double pivot_speed = 0;
+    public static final double pivot_speed_zero = 0;
+  
+
   }
+
+
 }

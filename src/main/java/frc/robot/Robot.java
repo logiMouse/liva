@@ -1,12 +1,18 @@
-j// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +25,24 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  // shooter 
+    CANSparkMax Shooter_low = new CANSparkMax(3,MotorType.kBrushless);
+    CANSparkMax Shooter_high = new CANSparkMax(4,MotorType.kBrushless);
+    CANSparkMax Shooter_hold = new CANSparkMax(5,MotorType.kBrushless);
+    // climber 
+    CANSparkMax Climber_left = new CANSparkMax(1, MotorType.kBrushless);
+    CANSparkMax Climber_Right = new CANSparkMax(2, MotorType.kBrushless);
+    // pivot 
+    CANSparkMax Pivot_motor = new CANSparkMax(6,MotorType.kBrushless);
+    // joysticks 
+    Joystick Joy1 = new Joystick(1);
+    Joystick Joy2 = new Joystick(2);
+    //Joystick buttons 
+    JoystickButton button0_pivot = new JoystickButton(Joy2, 0);
+    JoystickButton button1_pivot = new JoystickButton(Joy2, 1);
+    JoystickButton button2_climber = new JoystickButton(Joy2, 2);
+    JoystickButton button3_climber = new JoystickButton(Joy2, 3);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -28,6 +52,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+  
   }
 
   /**
@@ -76,12 +101,42 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+      // set idle mode 
+      Pivot_motor.setIdleMode(IdleMode.kBrake);
+
+      //Pivot_motor.setInverted(true);
     }
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+    //climber 
+    if (button2_climber.getAsBoolean()){
+      Climber_Right.set(Constants.climber_speed);
+      Climber_left.set(Constants.climber_speed);
+    }else if (button3_climber.getAsBoolean()) {
+      Climber_Right.set(Constants.climber_speed);
+      Climber_left.set(Constants.climber_speed);
+    } else {
+      Climber_Right.set(Constants.climber_speed_stop);
+      Climber_left.set(Constants.climber_speed_stop);
+    }
+
+
+    // pivot 
+    if(button0_pivot.getAsBoolean()){
+      Pivot_motor.set(Constants.pivot_speed);
+    }else if (button1_pivot.getAsBoolean()) {
+      Pivot_motor.set(Constants.pivot_speed);
+    } else {
+      Pivot_motor.set(Constants.pivot_speed_zero);
+      
+    }
+
+
+  }
 
   @Override
   public void testInit() {
